@@ -1,0 +1,88 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Forty by HTML5 UP</title>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+<link rel="stylesheet" href="assets/css/main.css" />
+<link rel="stylesheet" href="assets/css/board.css" />
+
+</head>
+<body>
+	<div id="board">
+		<h1>게시판 메인 페이지</h1>
+		<table id="list">
+			<thead>
+				<tr>
+					<td colspan="3"><input id="text" type="text"></td>
+					<td>
+						<button id="searchBtn">검색하기</button>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td>번호</td>
+					<td>제목</td>
+					<td>작성자</td>
+					<td>시간</td>
+				</tr>
+			</thead>
+			<tbody>
+
+				<!-- /boards/view?idx=1 => 쿼리스트링 	(RequestParam) -->
+				<!-- get 방식 /boards/1 => 경로변수 (PathVariable) -->
+				<tr th:each="board:${list}">
+					<td th:text="${board.idx}"></td>
+					<!-- @{} : 타입리프에서 경로설정하는 방법 , 기본경로로부터 상대 경로로 작성 -->
+					<td><a th:href="@{boards/{idx}(idx=${board.idx})}" th:text="${board.title}"></a></td>
+					<td th:text="${board.writer}"></td>
+					<td th:text="${board.indate}">$</td>
+					<td><a th:href="'javascript:deleteBoard('+${board.idx}+')'"> X </a></td>
+				</tr>
+
+
+			</tbody>
+		</table>
+
+		<!-- 게시물 작성페이지 요청 : get방식으로 요청 boards/new -->
+		<a href="boards/new"><button id="writer">작성하러가기</button></a>
+	</div>
+
+	<div>
+		<canvas id="myChart"></canvas>
+	</div>
+
+
+	<!-- Scripts -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/skel.min.js"></script>
+	<script src="assets/js/util.js"></script>
+
+	<script src="assets/js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="assets/js/search.js"></script>
+	<script>
+	function deleteBoard(idx) {
+		
+		let url = "/bigdata/boards/"+idx;
+		axios.delete(url)
+		.then(function(res) {
+			console.log(res.data);
+			// 1. db에서 다시 게시물 리스트 불러와서 출력
+			location.reload();
+			
+		})
+	}
+	</script>
+
+
+
+</body>
+</html>
